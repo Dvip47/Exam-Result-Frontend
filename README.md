@@ -1,115 +1,79 @@
-# SarkariResult Frontend (React 19 SSR)
+# Daily Exam Result Frontend (Next.js App Router)
 
-User-facing website with Server-Side Rendering for SEO.
+High-performance, SEO-optimized frontend for Daily Exam Result (DailyExamResult.com), migrated to **Next.js 14** using the App Router.
 
-## Features
+## 🚀 SEO & Performance Architecture
 
-- ✅ React 19 with SSR
-- ✅ Dynamic content from backend API
-- ✅ Category pages
-- ✅ Post detail pages
-- ✅ SEO optimization with React Helmet
-- ✅ Existing CSS styling
-- ✅ Responsive design
+- **Rendering Mode**: SSG (Static Site Generation) + ISR (Incremental Static Regeneration).
+- **ISR Window**: 60 seconds (Auto-updates content in the background).
+- **Metadata API**: Dynamic, unique `<title>`, `<meta description>`, and `<link rel="canonical">` for every page.
+- **Zero Hydration Delay**: Googlebot receives 100% of the content in the initial HTML response.
+- **Core Web Vitals**: Optimized for LCP, CLS, and INP with minimal client-side JS.
 
-## Quick Start
-
-### 1. Install Dependencies
-```bash
-cd frontend
-npm install
-```
-
-### 2. Build Client Bundle
-```bash
-npm run build
-```
-
-### 3. Start Server
-```bash
-# Development (with auto-reload)
-npm run dev
-
-# Production
-npm start
-```
-
-Server will run on: **http://localhost:3000**
-
-## Environment Variables
-
-Create `.env` file:
-```env
-API_URL=http://localhost:5000/api
-PORT=3000
-```
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 frontend/
 ├── src/
-│   ├── server/
-│   │   ├── index.js       # Express SSR server
-│   │   └── template.js    # HTML template
 │   ├── app/
-│   │   ├── components/    # Reusable components
-│   │   ├── pages/         # Page components
-│   │   ├── services/      # API integration
-│   │   ├── utils/         # Helper functions
-│   │   ├── App.jsx        # Main app component
-│   │   └── index.jsx      # Client entry (hydration)
+│   │   ├── [slug]/          # Category pages (Dynamic SSG)
+│   │   ├── post/[slug]/     # Post detail pages (Dynamic SSG + ISR)
+│   │   ├── components/      # Server & Client components
+│   │   ├── services/        # API integration layer
+│   │   ├── utils/           # Helper functions
+│   │   ├── layout.js        # Root layout & global metadata
+│   │   ├── page.js          # Homepage (ISR)
+│   │   ├── robots.js        # Dynamic robots.txt
+│   │   └── sitemap.js       # Dynamic sitemap.xml
 │   └── assets/
 │       └── css/
-│           └── style.css  # Existing CSS
-├── public/                # Static files
-├── package.json
-├── webpack.config.js
-└── .babelrc
+│           └── style.css    # Core visual identity (Vanilla CSS)
+├── public/                  # Static assets
+├── next.config.mjs          # Next.js configuration
+├── tailwind.config.js       # Utility styling configuration
+└── package.json             # Frameowrk dependencies
 ```
 
-## Routes
+## 🛠️ Getting Started
 
-| Route | Description |
-|-------|-------------|
-| `/` | Homepage (all posts) |
-| `/:slug` | Category page (e.g., `/latest-jobs`) |
-| `/post/:slug` | Post detail page |
-
-## How SSR Works
-
-1. **Server-Side**: Express renders React to HTML string
-2. **Client-Side**: React hydrates the HTML (makes it interactive)
-3. **Navigation**: React Router handles subsequent navigation
-
-## SEO Features
-
-- Meta tags via React Helmet
-- Server-rendered HTML (crawlable)
-- Semantic HTML structure
-- Dynamic titles and descriptions
-
-## Testing
-
-1. Ensure backend is running on port 5000
-2. Start frontend: `npm run dev`
-3. Visit: http://localhost:3000
-
-## Production Deployment
-
-### Build
+### 1. Install Dependencies
 ```bash
-npm run build
-npm start
+npm install
 ```
 
-### Hosting Options
-- Vercel
-- Netlify
-- AWS Amplify
-- Render
+### 2. Environment Variables
+Create a `.env` file in the root:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5001/api
+```
+
+### 3. Development
+```bash
+npm run dev
+```
+
+### 4. Production Build
+```bash
+# Build the optimized static site
+npm run build
+
+# Start the production server
+npm run start
+```
+
+## 🔍 SEO Infrastructure
+
+- **Sitemap**: Available at `/sitemap.xml` (Auto-generated from categories and posts).
+- **Robots.txt**: Available at `/robots.txt` (Guides search bots on crawl priority).
+- **JSON-LD**: Automated structured data injection for Jobs and Articles (Coming soon).
+
+## ⚠️ Known Issues / Troubleshooting
+
+### 429 Too Many Requests (Build Time)
+If you see 429 errors during `npm run build`, it means the backend rate limiter is blocking the static page generation requests. 
+**Solution**: Briefly increase the `max` value in `backend/src/middleware/rateLimit.middleware.js` to `500` or higher during production deployment.
 
 ---
 
-**Status:** ✅ Complete and ready to use!
-# Exam-Result-Frontend
+**Current Version:** `nextVersion` Branch (SEO Optimized)
+**Status:** ✅ Production Ready
