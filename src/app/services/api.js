@@ -13,33 +13,44 @@ const publicParams = {
 };
 
 export const fetchCategories = async () => {
-    const response = await api.get('/categories');
-    return response.data.data;
+    try {
+        const response = await api.get('/categories');
+        return response.data.data;
+    } catch (err) {
+        console.error('fetchCategories error:', err.message);
+        return [];
+    }
 };
 
 export const fetchPosts = async (params = {}) => {
-    // Merge provided params with strict public filters
-    const queryParams = { ...params, ...publicParams };
-
-    // For homepage or category lists
-    const response = await api.get('/posts', { params: queryParams });
-    // The backend returns { posts: [], pagination: {} } inside data.data
-    // But verify if it's data.data.posts if paginated?
-    // Based on Admin Panel debugging: 
-    // PostService returns { posts, pagination }. 
-    // ResponseWrapper wraps it in { success, data: { posts, pagination } }
-    // So response.data.data is { posts, pagination }
-    return response.data.data;
+    try {
+        const queryParams = { ...params, ...publicParams };
+        const response = await api.get('/posts', { params: queryParams });
+        return response.data.data;
+    } catch (err) {
+        console.error('fetchPosts error:', err.message);
+        return { posts: [] };
+    }
 };
 
 export const fetchPostBySlug = async (slug) => {
-    const response = await api.get(`/posts/slug/${slug}`);
-    return response.data.data;
+    try {
+        const response = await api.get(`/posts/slug/${slug}`);
+        return response.data.data;
+    } catch (err) {
+        console.error('fetchPostBySlug error:', err.message);
+        return null;
+    }
 };
 
 export const fetchPageBySlug = async (slug) => {
-    const response = await api.get(`/pages/${slug}`);
-    return response.data.data;
+    try {
+        const response = await api.get(`/pages/${slug}`);
+        return response.data.data;
+    } catch (err) {
+        console.error('fetchPageBySlug error:', err.message);
+        return null;
+    }
 };
 
 export default api;
