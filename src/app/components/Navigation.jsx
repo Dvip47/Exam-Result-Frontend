@@ -1,38 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import Link from 'next/link';
 import { fetchCategories } from '../services/api';
 
-export default function Navigation() {
-    const [categories, setCategories] = useState([]);
-
-    useEffect(() => {
-        loadCategories();
-    }, []);
-
-    const loadCategories = async () => {
-        try {
-            const data = await fetchCategories();
-            setCategories(data||[]);
-        } catch (error) {
-            console.error('Error loading categories:', error);
-        }
-    };
+export default async function Navigation() {
+    const categories = await fetchCategories();
 
     return (
         <nav className="navigation">
             <div className="container">
                 <ul className="nav-menu">
                     <li>
-                        <Link to="/">Home</Link>
+                        <Link href="/">Home</Link>
                     </li>
                     {Array.isArray(categories) && categories.map((category) => (
                         <li key={category._id}>
-                            <Link to={`/${category.slug}`}>{category.name}</Link>
+                            <Link href={`/${category.slug}`}>{category.name}</Link>
                         </li>
                     ))}
-
                     <li>
-                        <Link to="/">More</Link>
+                        <Link href="/">More</Link>
                     </li>
                 </ul>
             </div>

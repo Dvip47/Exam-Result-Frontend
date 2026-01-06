@@ -1,0 +1,7 @@
+User-Agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /login/
+Disallow: /api/
+
+Sitemap: https://dailyexamresult.com/sitemap.xml
