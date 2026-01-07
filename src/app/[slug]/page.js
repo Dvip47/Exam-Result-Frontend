@@ -13,10 +13,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
     const { slug } = params;
-    const title = slug.replace(/-/g, ' ').toUpperCase();
+    const name = slug.replace(/-/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
     return {
-        title: `${title} - Daily Exam Result`,
-        description: `Latest ${title} updates, notifications and results. Stay updated with Daily Exam Result.`,
+        title: `${name} 2025 | Latest Updates & Notifications`,
+        description: `Get all latest ${name} updates, list of jobs, results, and admit cards. Daily Exam Result provides the fastest updates for ${name} at DailyExamResult.com.`,
         alternates: {
             canonical: `https://dailyexamresult.com/${slug}`,
         },
@@ -42,7 +43,7 @@ export default async function CategoryPage({ params }) {
         <div className="main-container">
             <div className="content-grid">
                 <div className="content-box full-width">
-                    <div className="box-header">{categoryName}</div>
+                    <h1 className="box-header" style={{ margin: 0 }}>{categoryName}</h1>
                     <div className="box-content">
                         {posts.length > 0 ? (
                             <ul className="job-list">

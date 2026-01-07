@@ -4,6 +4,14 @@ import { fetchPosts } from './services/api';
 
 export const revalidate = 60; // ISR 60 seconds
 
+export const metadata = {
+    title: 'Daily Exam Result: Latest Government Jobs, Result, Admit Card 2025',
+    description: 'Explore Daily Exam Result for latest Sarkari Results, online forms, admit cards, and job notifications. Stay updated with the fastest career news portal in India.',
+    alternates: {
+        canonical: 'https://dailyexamresult.com',
+    },
+};
+
 export default async function Home() {
     const data = await fetchPosts({ limit: 30 });
     const posts = data.posts || [];
@@ -23,7 +31,7 @@ export default async function Home() {
             {/* Info Section */}
             <div className="info-section">
                 <p>
-                    <strong>Daily Exam Result Official</strong> Get Online Form, Results, Admit Card, Answer
+                    <h1 style={{ display: 'inline', fontSize: 'inherit', fontWeight: 'bold' }}>Daily Exam Result Official</h1> Get Online Form, Results, Admit Card, Answer
                     Key, Syllabus, Career News, Sarkari Yojana, Scholarship, Sarkari Notice etc.
                 </p>
                 <div className="live-badge">🔴 LIVE</div>

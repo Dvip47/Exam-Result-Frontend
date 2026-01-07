@@ -1,5 +1,6 @@
 import { fetchPostBySlug, fetchPosts } from '../../services/api';
 import { formatDate } from '../../utils/helpers';
+import JsonLd from '../../components/JsonLd';
 
 export const revalidate = 60; // ISR 60 seconds
 
@@ -16,9 +17,12 @@ export async function generateMetadata({ params }) {
 
     if (!post) return { title: 'Post Not Found - Daily Exam Result' };
 
+    const title = post.metaTitle || post.title;
+    const desc = post.metaDescription || post.shortDescription || `Apply for ${post.title} at ${post.organization}. Get latest details on eligibility, fees, and important dates at Daily Exam Result.`;
+
     return {
-        title: `${post.metaTitle || post.title} - Daily Exam Result`,
-        description: post.metaDescription || post.shortDescription,
+        title: title.length > 60 ? title.substring(0, 57) + '...' : title,
+        description: desc.length > 160 ? desc.substring(0, 157) + '...' : desc,
         alternates: {
             canonical: `https://dailyexamresult.com/post/${slug}`,
         },
@@ -36,12 +40,38 @@ export default async function PostDetailPage({ params }) {
     const postDate = post.postDate ? formatDate(post.postDate) : 'N/A';
     const lastDate = post.lastDate ? formatDate(post.lastDate) : 'N/A';
 
+    // Structured Data
+    const structuredData = {
+        "@context": "https://schema.org/",
+        "@type": "JobPosting",
+        "title": post.title,
+        "description": post.shortDescription || post.title,
+        "datePosted": post.postDate || post.createdAt,
+        "validThrough": post.lastDate,
+        "hiringOrganization": {
+            "@type": "Organization",
+            "name": post.organization || "Govt Jobs",
+            "sameAs": "https://dailyexamresult.com"
+        },
+        "jobLocationType": "TELECOMMUTE",
+        "baseSalary": {
+            "@type": "MonetaryAmount",
+            "currency": "INR",
+            "value": {
+                "@type": "QuantitativeValue",
+                "value": post.fees || 0,
+                "unitText": "INR"
+            }
+        }
+    };
+
     return (
         <div className="main-container">
+            <JsonLd data={structuredData} />
             {/* 1. Top Header */}
-            <div className="sarkari-header">
+            <h1 className="sarkari-header" style={{ fontSize: '24px', margin: '15px 0' }}>
                 {post.title}
-            </div>
+            </h1>
 
             {/* 2. Sub-info */}
             <div className="text-center mb-4">
