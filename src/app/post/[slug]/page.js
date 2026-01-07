@@ -45,7 +45,6 @@ export default async function PostDetailPage({ params }) {
         "@context": "https://schema.org/",
         "@type": "JobPosting",
         "title": post.title,
-        "description": post.shortDescription || post.title,
         "datePosted": post.postDate || post.createdAt,
         "validThrough": post.lastDate,
         "hiringOrganization": {
@@ -54,6 +53,7 @@ export default async function PostDetailPage({ params }) {
             "sameAs": "https://dailyexamresult.com"
         },
         "jobLocationType": "TELECOMMUTE",
+        "description": post.educationalQualification ? `${post.educationalQualification}\n\n${post.shortDescription || post.title}` : (post.shortDescription || post.title),
         "baseSalary": {
             "@type": "MonetaryAmount",
             "currency": "INR",
@@ -112,18 +112,17 @@ export default async function PostDetailPage({ params }) {
                         <ul>
                             <li><strong>General / OBC / EWS : </strong> {post.fees || '0'}</li>
                             <li><strong>SC / ST : </strong> 0</li>
-                            <li className="mt-2"><strong>Payment Mode : </strong> {post.paymentMode || 'Debit Card, Credit Card, Net Banking'}</li>
+                            <li className="mt-2 text-red-600"><strong>Payment Mode : </strong> {post.paymentMode || 'Debit Card, Credit Card, Net Banking'}</li>
                         </ul>
                     </div>
                 </div>
 
-                {/* 6. Age Limit & Vacancy Header */}
+                {/* 6. Age Limit Section */}
                 <div className="sarkari-green-header" style={{ marginTop: '0' }}>
                     {post.title} : Age Limit as on {new Date().getFullYear()}
                 </div>
-
-                <div className="info-grid" style={{ borderTop: 'none' }}>
-                    <div className="info-col" style={{ borderRight: 'none', textAlign: 'center' }}>
+                <div className="info-grid" style={{ borderTop: 'none', textAlign: 'center' }}>
+                    <div className="info-col" style={{ borderRight: 'none', width: '100%' }}>
                         <ul>
                             <li><strong>Minimum Age : </strong> {post.minAge || '18'} Years</li>
                             <li><strong>Maximum Age : </strong> {post.maxAge || post.ageLimit || 'NA'} Years</li>
@@ -131,6 +130,66 @@ export default async function PostDetailPage({ params }) {
                         </ul>
                     </div>
                 </div>
+
+                {/* New Structured Sections */}
+                {post.educationalQualification && (
+                    <>
+                        <div className="sarkari-orange-header">
+                            Educational Qualification
+                        </div>
+                        <div className="p-4 bg-white border border-gray-900 border-t-0 text-center font-bold">
+                            {post.educationalQualification}
+                        </div>
+                    </>
+                )}
+
+                {post.categoryWiseVacancy && post.categoryWiseVacancy.length > 0 && (
+                    <>
+                        <div className="sarkari-orange-header">
+                            Vacancy Details (Category-Wise)
+                        </div>
+                        <table className="sarkari-table" style={{ marginTop: '0' }}>
+                            <thead>
+                                <tr>
+                                    <th>Category Name</th>
+                                    <th>Total Post</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {post.categoryWiseVacancy.map((v, i) => (
+                                    <tr key={i}>
+                                        <td>{v.category}</td>
+                                        <td>{v.totalPosts}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </>
+                )}
+
+                {post.postWiseVacancy && post.postWiseVacancy.length > 0 && (
+                    <>
+                        <div className="sarkari-orange-header">
+                            Post-Wise Vacancy Distribution
+                        </div>
+                        <table className="sarkari-table" style={{ marginTop: '0' }}>
+                            <thead>
+                                <tr>
+                                    <th>Post Name</th>
+                                    <th>Total Post</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {post.postWiseVacancy.map((v, i) => (
+                                    <tr key={i}>
+                                        <td>{v.postName}</td>
+                                        <td>{v.totalPosts}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </>
+                )}
 
                 {/* 7. Vacancy Details Table */}
                 <div className="sarkari-orange-header">
@@ -153,6 +212,86 @@ export default async function PostDetailPage({ params }) {
                         </tr>
                     </tbody>
                 </table>
+
+                {post.physicalStandardTest && (post.physicalStandardTest.male?.length > 0 || post.physicalStandardTest.female?.length > 0) && (
+                    <>
+                        <div className="sarkari-orange-header">
+                            Physical Standard Test (PST)
+                        </div>
+                        {post.physicalStandardTest.male?.length > 0 && (
+                            <table className="sarkari-table" style={{ marginTop: '0' }}>
+                                <thead>
+                                    <tr>
+                                        <th colSpan="3" style={{ backgroundColor: '#0d1f5c' }}>Male Candidates</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Height</th>
+                                        <th>Chest</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {post.physicalStandardTest.male.map((v, i) => (
+                                        <tr key={i}>
+                                            <td>{v.category}</td>
+                                            <td>{v.height}</td>
+                                            <td>{v.chest || 'NA'}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                        {post.physicalStandardTest.female?.length > 0 && (
+                            <table className="sarkari-table" style={{ marginTop: '0' }}>
+                                <thead>
+                                    <tr>
+                                        <th colSpan="3" style={{ backgroundColor: '#0d1f5c' }}>Female Candidates</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Height</th>
+                                        <th>Min Weight</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {post.physicalStandardTest.female.map((v, i) => (
+                                        <tr key={i}>
+                                            <td>{v.category}</td>
+                                            <td>{v.height}</td>
+                                            <td>{v.minWeight || 'NA'}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </>
+                )}
+
+                {post.physicalEfficiencyTest && post.physicalEfficiencyTest.length > 0 && (
+                    <>
+                        <div className="sarkari-orange-header">
+                            Physical Efficiency Test (PET)
+                        </div>
+                        <table className="sarkari-table" style={{ marginTop: '0' }}>
+                            <thead>
+                                <tr>
+                                    <th>Category / Activity</th>
+                                    <th>Distance</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {post.physicalEfficiencyTest.map((v, i) => (
+                                    <tr key={i}>
+                                        <td>{v.category}</td>
+                                        <td>{v.distance}</td>
+                                        <td>{v.time}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </>
+                )}
 
                 {/* 8. Full Description / Instructions */}
                 <div className="sarkari-box-header" style={{ backgroundColor: '#0d1f5c' }}>
@@ -200,6 +339,6 @@ export default async function PostDetailPage({ params }) {
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div >
     );
 }
