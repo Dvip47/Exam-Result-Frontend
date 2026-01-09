@@ -37,8 +37,8 @@ export default async function PostDetailPage({ params }) {
         return <div className="text-center py-8 text-red-600">Post not found</div>;
     }
 
-    const postDate = post.postDate ? formatDate(post.postDate) : 'N/A';
-    const lastDate = post.lastDate ? formatDate(post.lastDate) : 'N/A';
+    const postDate = post.postDate ? formatDate(post.postDate) : 'Available Soon';
+    const lastDate = post.lastDate ? formatDate(post.lastDate) : 'Available Soon';
 
     // Structured Data
     const structuredData = {
@@ -100,18 +100,18 @@ export default async function PostDetailPage({ params }) {
                     <div className="info-col">
                         <h3 className="col-header">Important Dates</h3>
                         <ul>
-                            <li><strong>Application Begin : </strong> {post.postDate ? formatDate(post.postDate) : 'N/A'}</li>
+                            <li><strong>Application Begin : </strong> {post.postDate ? formatDate(post.postDate) : 'Available Soon'}</li>
                             <li><strong>Last Date for Apply Online : </strong> <span style={{ color: 'red' }}>{lastDate}</span></li>
                             {post.importantDates && post.importantDates.map((d, i) => (
-                                <li key={i}><strong>{d.label} : </strong> {d.date ? formatDate(d.date) : 'N/A'}</li>
+                                <li key={i}><strong>{d.label} : </strong> {d.date ? formatDate(d.date) : 'Available Soon'}</li>
                             ))}
                         </ul>
                     </div>
                     <div className="info-col">
                         <h3 className="col-header">Application Fee</h3>
                         <ul>
-                            <li><strong>General / OBC / EWS : </strong> {post.fees || '0'}</li>
-                            <li><strong>SC / ST : </strong> 0</li>
+                            {/* <li><strong>General / OBC / EWS : </strong> {post.fees || '0'}</li> */}
+                            <li><strong>{post.fees || ''}</strong> </li>
                             <li className="mt-2 text-red-600"><strong>Payment Mode : </strong> {post.paymentMode || 'Debit Card, Credit Card, Net Banking'}</li>
                         </ul>
                     </div>
