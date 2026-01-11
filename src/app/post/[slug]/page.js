@@ -37,6 +37,13 @@ export default async function PostDetailPage({ params }) {
         return <div className="text-center py-8 text-red-600">Post not found</div>;
     }
 
+    const categorySlug = post.category?.slug || '';
+    const isJob = categorySlug === 'latest-jobs';
+    const isAdmitResult = ['admit-cards', 'results'].includes(categorySlug);
+
+    const actionLabel = post.category?.primaryActionLabel || (isJob ? "Apply Online" : "View Details");
+    const actionLink = post.primaryActionLink || post.applyLink;
+
     const postDate = post.postDate ? formatDate(post.postDate) : 'Available Soon';
     const lastDate = post.lastDate ? formatDate(post.lastDate) : 'Available Soon';
 
@@ -101,35 +108,49 @@ export default async function PostDetailPage({ params }) {
                         <h3 className="col-header">Important Dates</h3>
                         <ul>
                             <li><strong>Application Begin : </strong> {post.postDate ? formatDate(post.postDate) : 'Available Soon'}</li>
-                            <li><strong>Last Date for Apply Online : </strong> <span style={{ color: 'red' }}>{lastDate}</span></li>
+                            {isJob && <li><strong>Last Date for Apply Online : </strong> <span style={{ color: 'red' }}>{lastDate}</span></li>}
                             {post.importantDates && post.importantDates.map((d, i) => (
                                 <li key={i}><strong>{d.label} : </strong> {d.date ? formatDate(d.date) : 'Available Soon'}</li>
                             ))}
                         </ul>
                     </div>
-                    <div className="info-col">
-                        <h3 className="col-header">Application Fee</h3>
-                        <ul>
-                            {/* <li><strong>General / OBC / EWS : </strong> {post.fees || '0'}</li> */}
-                            <li><strong>{post.fees || ''}</strong> </li>
-                            <li className="mt-2 text-red-600"><strong>Payment Mode : </strong> {post.paymentMode || 'Debit Card, Credit Card, Net Banking'}</li>
-                        </ul>
-                    </div>
+                    {isJob ? (
+                        <div className="info-col">
+                            <h3 className="col-header">Application Fee</h3>
+                            <ul>
+                                <li><strong>{post.fees || ''}</strong> </li>
+                                <li className="mt-2 text-red-600"><strong>Payment Mode : </strong> {post.paymentMode || 'Debit Card, Credit Card, Net Banking'}</li>
+                            </ul>
+                        </div>
+                    ) : (
+                        <div className="info-col">
+                            <h3 className="col-header">Availability Status</h3>
+                            <ul className="text-center py-4">
+                                <li className="text-red-600 font-bold animate-pulse text-lg">
+                                    {post.availabilityNote || 'Information will be updated soon...'}
+                                </li>
+                            </ul>
+                        </div>
+                    )}
                 </div>
 
                 {/* 6. Age Limit Section */}
-                <div className="sarkari-green-header" style={{ marginTop: '0' }}>
-                    {post.title} : Age Limit as on {new Date().getFullYear()}
-                </div>
-                <div className="info-grid" style={{ borderTop: 'none', textAlign: 'center' }}>
-                    <div className="info-col" style={{ borderRight: 'none', width: '100%' }}>
-                        <ul>
-                            <li><strong>Minimum Age : </strong> {post.minAge || '18'} Years</li>
-                            <li><strong>Maximum Age : </strong> {post.maxAge || post.ageLimit || 'NA'} Years</li>
-                            <li>Age Relaxation Extra as per Rules</li>
-                        </ul>
-                    </div>
-                </div>
+                {isJob && (
+                    <>
+                        <div className="sarkari-green-header" style={{ marginTop: '0' }}>
+                            {post.title} : Age Limit as on {new Date().getFullYear()}
+                        </div>
+                        <div className="info-grid" style={{ borderTop: 'none', textAlign: 'center' }}>
+                            <div className="info-col" style={{ borderRight: 'none', width: '100%' }}>
+                                <ul>
+                                    <li><strong>Minimum Age : </strong> {post.minAge || '18'} Years</li>
+                                    <li><strong>Maximum Age : </strong> {post.maxAge || post.ageLimit || 'NA'} Years</li>
+                                    <li>Age Relaxation Extra as per Rules</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </>
+                )}
 
                 {/* New Structured Sections */}
                 {post.educationalQualification && (
@@ -192,26 +213,30 @@ export default async function PostDetailPage({ params }) {
                 )}
 
                 {/* 7. Vacancy Details Table */}
-                <div className="sarkari-orange-header">
-                    Vacancy Details Total : {post.totalPosts || 'VARIOUS'} Post
-                </div>
+                {isJob && (
+                    <div className="sarkari-orange-header">
+                        Vacancy Details Total : {post.totalPosts || 'VARIOUS'} Post
+                    </div>
+                )}
 
-                <table className="sarkari-table" style={{ marginTop: '0' }}>
-                    <thead>
-                        <tr>
-                            <th>Post Name</th>
-                            <th>Total Post</th>
-                            <th>Eligibility / Qualification</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{post.title}</td>
-                            <td>{post.totalPosts || 'NA'}</td>
-                            <td>{post.qualification || 'See Notification'}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                {isJob && (
+                    <table className="sarkari-table" style={{ marginTop: '0' }}>
+                        <thead>
+                            <tr>
+                                <th>Post Name</th>
+                                <th>Total Post</th>
+                                <th>Eligibility / Qualification</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{post.title}</td>
+                                <td>{post.totalPosts || 'NA'}</td>
+                                <td>{post.qualification || 'See Notification'}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                )}
 
                 {post.physicalStandardTest && (post.physicalStandardTest.male?.length > 0 || post.physicalStandardTest.female?.length > 0) && (
                     <>
@@ -294,18 +319,22 @@ export default async function PostDetailPage({ params }) {
                 )}
 
                 {/* 8. Full Description / Instructions */}
-                <div className="sarkari-box-header" style={{ backgroundColor: '#0d1f5c' }}>
-                    How to Fill Form
-                </div>
-                <div className="p-4" style={{ border: '1px solid #000', borderTop: 'none' }}>
-                    <ul style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
-                        <li>Candidate Read the Notification Before Apply the Recruitment Application Form in {post.organization}.</li>
-                        <li>Kindly Check and Collect the All Document - Eligibility, ID Proof, Address Details, Basic Details.</li>
-                        <li>Kindly Ready Scan Document Related to Recruitment Form - Photo, Sign, ID Proof, Etc.</li>
-                        <li>Before Submit the Application Form Must Check the Preview and All Column Carefully.</li>
-                        <li>Take A Print Out of Final Submitted Form.</li>
-                    </ul>
-                </div>
+                {isJob && (
+                    <>
+                        <div className="sarkari-box-header" style={{ backgroundColor: '#0d1f5c' }}>
+                            How to Fill Form
+                        </div>
+                        <div className="p-4" style={{ border: '1px solid #000', borderTop: 'none' }}>
+                            <ul style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
+                                <li>Candidate Read the Notification Before Apply the Recruitment Application Form in {post.organization}.</li>
+                                <li>Kindly Check and Collect the All Document - Eligibility, ID Proof, Address Details, Basic Details.</li>
+                                <li>Kindly Ready Scan Document Related to Recruitment Form - Photo, Sign, ID Proof, Etc.</li>
+                                <li>Before Submit the Application Form Must Check the Preview and All Column Carefully.</li>
+                                <li>Take A Print Out of Final Submitted Form.</li>
+                            </ul>
+                        </div>
+                    </>
+                )}
 
                 {/* 9. Useful Important Links */}
                 <div className="sarkari-green-header" style={{ marginTop: '20px' }}>
@@ -314,10 +343,10 @@ export default async function PostDetailPage({ params }) {
 
                 <table className="sarkari-table" style={{ marginTop: '0' }}>
                     <tbody>
-                        {post.applyLink && (
+                        {actionLink && (
                             <tr>
-                                <td className="dl-label">Apply Online</td>
-                                <td className="center-text"><a href={post.applyLink} target="_blank" rel="noopener noreferrer" className="post-link-btn">Click Here</a></td>
+                                <td className="dl-label">{actionLabel}</td>
+                                <td className="center-text"><a href={actionLink} target="_blank" rel="noopener noreferrer" className="post-link-btn">Click Here</a></td>
                             </tr>
                         )}
                         {post.notificationPdf && (
