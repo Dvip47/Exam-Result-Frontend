@@ -7,52 +7,44 @@ const baseUrl = 'https://dailyexamresult.com';
 
 export const metadata = {
     metadataBase: new URL(baseUrl),
+
     title: {
         default: 'Daily Exam Result - Latest Government Jobs, Results, Admit Cards 2025',
         template: '%s | Daily Exam Result',
     },
-    description: 'Daily Exam Result - Get latest Govt Jobs, Results, Admit Card, Answer Key, Syllabus, Admission, and other educational updates.',
-    keywords: ['Daily Exam Result', 'Sarkari Result', 'Sarkari Exam', 'Govt Jobs', 'Results 2025', 'Latest Jobs'],
+
+    description:
+        'Daily Exam Result provides latest Government Jobs, Results, Admit Cards, Answer Keys, Syllabus and Admission updates.',
+
     authors: [{ name: 'Daily Exam Result Team' }],
     creator: 'Daily Exam Result',
     publisher: 'Daily Exam Result',
+
     formatDetection: {
         email: false,
         address: false,
         telephone: false,
     },
+
     icons: {
         icon: '/favicon.ico',
         shortcut: '/favicon.ico',
-        apple: '/apple-icon.png',
-        other: [
-            {
-                rel: 'icon',
-                type: 'image/png',
-                sizes: '192x192',
-                url: '/icon-192.png',
-            },
-            {
-                rel: 'icon',
-                type: 'image/png',
-                sizes: '512x512',
-                url: '/icon-512.png',
-            },
-        ],
+        apple: '/apple-touch-icon.png',
     },
+
     robots: {
         index: true,
         follow: true,
         googleBot: {
             index: true,
             follow: true,
-            'max-video-preview': -1,
             'max-image-preview': 'large',
             'max-snippet': -1,
         },
     },
+
     alternates: {
-        canonical: './',
+        canonical: baseUrl,
     },
 };
 
