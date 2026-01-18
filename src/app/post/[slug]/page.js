@@ -42,7 +42,7 @@ export default async function PostDetailPage({ params }) {
     const isAdmitResult = ['admit-cards', 'results'].includes(categorySlug);
 
     const actionLabel = post.category?.primaryActionLabel || (isJob ? "Apply Online" : "View Details");
-    const actionLink = post.primaryActionLink || post.applyLink;
+    const actionLink = post.primaryActionLink;
 
     const postDate = post.postDate ? formatDate(post.postDate) : 'Available Soon';
     const lastDate = post.lastDate ? formatDate(post.lastDate) : 'Available Soon';
