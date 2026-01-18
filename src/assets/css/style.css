@@ -606,3 +606,9 @@ a:hover {
     text-decoration: underline;
     cursor: pointer;
 }
+
+.info-section .info-text {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 14px;
+}

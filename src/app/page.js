@@ -23,6 +23,7 @@ export default async function Home() {
             acc[categoryName] = [];
         }
         acc[categoryName].push(post);
+        acc[categoryName].sort((a, b) => new Date(b.postDate) - new Date(a.postDate));
         return acc;
     }, {});
 
@@ -30,10 +31,10 @@ export default async function Home() {
         <div className="main-container">
             {/* Info Section */}
             <div className="info-section">
-                <p>
-                    <h1 style={{ display: 'inline', fontSize: 'inherit', fontWeight: 'bold' }}>Daily Exam Result Official</h1> Get Online Form, Results, Admit Card, Answer
+                <div className="info-text">
+                    <h2 style={{ display: 'inline', fontSize: 'inherit', fontWeight: 'bold' }}>Daily Exam Result Official</h2> Get Online Form, Results, Admit Card, Answer
                     Key, Syllabus, Career News, Sarkari Yojana, Scholarship, Sarkari Notice etc.
-                </p>
+                </div>
                 <div className="live-badge">🔴 LIVE</div>
             </div>
 
@@ -56,6 +57,7 @@ export default async function Home() {
                                     </li>
                                 ))}
                             </ul>
+                            {categoryPosts.length > 10 && <Link href={`/${categoryName.toLocaleLowerCase()}`}>View All</Link>}
                         </div>
                     </div>
                 ))}

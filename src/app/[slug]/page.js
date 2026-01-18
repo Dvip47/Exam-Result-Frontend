@@ -31,6 +31,8 @@ export default async function CategoryPage({ params }) {
 
     try {
         const data = await fetchPosts({ category: slug, limit: 50 });
+        data.posts.sort((a, b) => new Date(b.postDate) - new Date(a.postDate));
+
         posts = data.posts || [];
         if (posts.length > 0) {
             categoryName = posts[0].category?.name || categoryName;
