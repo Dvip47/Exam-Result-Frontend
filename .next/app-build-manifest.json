@@ -11,10 +11,10 @@
       "static/css/css-src_assets_css_style_css.css",
       "static/chunks/app/layout.js"
     ],
-    "/[slug]/page": [
+    "/loading": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/[slug]/page.js"
+      "static/chunks/app/loading.js"
     ]
   }
 }
